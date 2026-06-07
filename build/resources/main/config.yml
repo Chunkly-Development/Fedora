@@ -1,0 +1,10 @@
+maintenance:
+  status: true
+  kick-reason: "&cServer is currently in maintenance.
+&cGo back Later"
+  accepted-players:
+    - "ssnowk"
+  motd:
+    line-1: "&f&lChunkly &7┃ &cchunkly.org/updates"
+    line-2: "&eCheck our page for updates."
+

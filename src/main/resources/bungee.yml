@@ -1,0 +1,3 @@
+name: Fedora
+version: '1.0-STABLE'
+main: org.chunkly.fedora.Fedora
