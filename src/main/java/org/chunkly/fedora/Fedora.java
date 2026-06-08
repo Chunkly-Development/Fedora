@@ -3,6 +3,7 @@ package org.chunkly.fedora;
 import lombok.Getter;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.chunkly.fedora.config.ConfigManager;
+import org.chunkly.fedora.countdown.CountdownManager;
 import org.chunkly.fedora.lib.Manager;
 import org.chunkly.fedora.lib.command.CommandHandler;
 import org.chunkly.fedora.maintenance.MaintenanceManager;
@@ -17,6 +18,7 @@ public final class Fedora extends Plugin {
     private CommandHandler commandHandler;
     private ConfigManager configManager;
     private MaintenanceManager maintenanceManager;
+    private CountdownManager countdownManager;
 
     @Override
     public void onEnable() {
@@ -24,6 +26,7 @@ public final class Fedora extends Plugin {
         this.commandHandler = new CommandHandler(this);
         this.configManager = new ConfigManager(this);
         this.maintenanceManager = new MaintenanceManager(this);
+        this.countdownManager = new CountdownManager(this);
 
 
         this.managers.forEach(Manager::load);

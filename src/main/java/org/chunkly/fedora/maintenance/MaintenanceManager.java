@@ -41,6 +41,7 @@ public class MaintenanceManager extends Manager {
     @Override
     public void unload() {
         try{
+            getInstance().getConfigManager().setMaintenanceStatus(status);
             getInstance().getConfigManager().saveAcceptedPlayers(acceptedPlayers);
         }catch (IOException e){
             e.fillInStackTrace();

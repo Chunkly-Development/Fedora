@@ -1,6 +1,8 @@
 package org.chunkly.fedora.config;
 
 public record Config(
-        MaintenanceConfig maintenance
+        MaintenanceConfig maintenance,
+        CountdownConfig countdown,
+        MOTDConfig motd
 ) {
 }

@@ -1,4 +1,7 @@
-apply plugin: 'java'
+plugins {
+    id 'java'
+    id 'com.gradleup.shadow' version '8.3.5'
+}
 
 group = 'org.chunkly'
 version = '1.0-STABLE'
@@ -44,3 +47,9 @@ processResources {
         expand props
     }
 }
+
+shadowJar {
+    archiveClassifier.set('')
+}
+
+build.dependsOn shadowJar
