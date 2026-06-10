@@ -1,8 +1,17 @@
 maintenance:
   status: true
   kick-reason: "&cServer is currently in maintenance.\n&cGo back Later"
-  accepted-players: {}
+  accepted-players: []
   motd:
     line-1: "&f&lChunkly &7┃ &cchunkly.org/updates"
     line-2: "&eCheck our page for updates."
 
+motd:
+  line-1: "&f&lChunkly &7┃ &cchunkly.org/discord"
+  line-2: "&6&lHCF Release&7: &c&l{countdown}"
+
+countdown:
+  enabled: false
+  target: ""
+  format: "{countdown}"
+  finished-line: "&a&lCurrently Active!"

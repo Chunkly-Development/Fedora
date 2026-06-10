@@ -22,7 +22,7 @@ public class MaintenanceManager extends Manager {
         this.status = false;
 
         new MaintenanceListener(this);
-        getInstance().getCommandHandler().registerCommand(new MaintenanceCommand(this));
+        new MaintenanceCommand(this);
     }
 
     @Override

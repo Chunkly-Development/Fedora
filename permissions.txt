@@ -1,0 +1,12 @@
+fedora.command.broadcast
+fedora.command.maintenance
+fedora.command.maintenance.toggle
+fedora.command.maintenance.add
+fedora.command.maintenance.remove
+fedora.command.maintenance.list
+fedora.command.motd
+fedora.command.motd.line1
+fedora.command.motd.line2
+fedora.command.motd.countdown
+fedora.command.motd.countdown.start
+fedora.command.motd.countdown.stop

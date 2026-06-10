@@ -29,6 +29,27 @@ public class CountdownManager extends Manager {
         return config.targetEpoch() - (System.currentTimeMillis() / 1000L);
     }
 
+    public void setEnabled(boolean enabled) {
+        try {
+            getInstance().getConfigManager().setCountdownEnabled(enabled);
+            reload();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setTarget(String date) {
+        try {
+            getInstance().getConfigManager().setCountdownTarget(date);
+            reload();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void reload() {
+        this.config = getInstance().getConfigManager().getConfig().countdown();
+    }
 
     public String getFormattedCountdown() {
         long remaining = getRemainingSeconds();
@@ -48,7 +69,4 @@ public class CountdownManager extends Manager {
 
         return sb.toString().trim();
     }
-
-
-
 }

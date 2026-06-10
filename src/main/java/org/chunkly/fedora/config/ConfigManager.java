@@ -137,6 +137,14 @@ public class ConfigManager extends Manager {
         updateConfig(yaml -> yaml.set("countdown.target", date));
     }
 
+    public void setMOTDLine1(String motdLine1) throws IOException{
+        updateConfig(yaml -> yaml.set("motd.line-1", motdLine1));
+    }
+
+    public void setMOTDLine2(String motdLine1) throws IOException{
+        updateConfig(yaml -> yaml.set("motd.line-2", motdLine1));
+    }
+
     private void saveDefaultConfig(File configFile) throws IOException {
         try (InputStream inputStream = getInstance().getResourceAsStream("config.yml")) {
             if (inputStream == null) {

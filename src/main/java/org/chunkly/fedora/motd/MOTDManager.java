@@ -1,12 +1,11 @@
 package org.chunkly.fedora.motd;
 
 import org.chunkly.fedora.Fedora;
-import org.chunkly.fedora.config.MOTDConfig;
 import org.chunkly.fedora.lib.Manager;
+import org.chunkly.fedora.motd.command.MOTDCommand;
+import org.chunkly.fedora.motd.listener.MOTDListener;
 
 public class MOTDManager extends Manager {
-
-    private MOTDConfig config;
 
     public MOTDManager(Fedora instance) {
         super(instance);
@@ -14,12 +13,12 @@ public class MOTDManager extends Manager {
 
     @Override
     public void load() {
-        this.config = getInstance().getConfigManager().getConfig().motd();
+        new MOTDListener(this);
+        new MOTDCommand(this);
     }
 
-
     public String getLine1(){
-        return this.config.motdLine1()
+        return getInstance().getConfigManager().getConfig().motd().motdLine1()
                 .replace(
                         getInstance().getConfigManager().getConfig().countdown().format(),
                         getInstance().getCountdownManager().getFormattedCountdown()
@@ -27,7 +26,7 @@ public class MOTDManager extends Manager {
     }
 
     public String getLine2(){
-        return this.config.motdLine2()
+        return getInstance().getConfigManager().getConfig().motd().motdLine2()
                 .replace(
                         getInstance().getConfigManager().getConfig().countdown().format(),
                         getInstance().getCountdownManager().getFormattedCountdown()
