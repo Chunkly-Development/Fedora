@@ -1,33 +1,85 @@
-name: Build and Release
+name: "Build Fedora and release to GitHub"
 
 on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "The version to release (e.g. v1.0.0-STABLE)"
+        required: true
+        type: string
+        default: "v0.0.0-STABLE"
   push:
     tags:
-      - 'v*'
-  workflow_dispatch:
+      - "v*.*.*-STABLE"
 
 jobs:
   build:
+    name: "Build and release Fedora"
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 17
+      - name: "Checkout code"
+        uses: actions/checkout@v4
+
+      - name: "Set up JDK 17"
         uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: 'temurin'
-      - name: Grant execute permission for gradlew
+
+      - name: "Resolve release version"
+        id: version
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION="${GITHUB_REF_NAME}"
+          fi
+
+          if [[ ! "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-STABLE$ ]]; then
+            echo "Invalid version: $VERSION"
+            echo "Expected format: vX.Y.Z-STABLE"
+            exit 1
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: "Grant execute permission for gradlew"
         run: chmod +x gradlew
-      - name: Build with Gradle
+
+      - name: "Build with Gradle"
         run: ./gradlew shadowJar
-      - name: Upload JAR as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Fedora-Plugin
-          path: build/libs/*.jar
-      - name: Create GitHub Release
-        if: startsWith(github.ref, 'refs/tags/')
+
+      - name: "Resolve artifact"
+        id: artifact
+        shell: bash
+        run: |
+          JAR_PATH="$(find build/libs -maxdepth 1 -type f -name '*.jar' | head -n 1)"
+          if [[ -z "$JAR_PATH" ]]; then
+            echo "No jar artifact found in build/libs"
+            exit 1
+          fi
+
+          RELEASE_JAR="build/libs/Fedora-${{ steps.version.outputs.version }}.jar"
+          mv "$JAR_PATH" "$RELEASE_JAR"
+          echo "path=$RELEASE_JAR" >> "$GITHUB_OUTPUT"
+
+      - name: "Load changelog"
+        shell: bash
+        run: |
+          if [[ -s CHANGELOG.md ]]; then
+            cp CHANGELOG.md release-body.md
+          else
+            printf '%s\n' "Automated Fedora release ${{ steps.version.outputs.version }}." > release-body.md
+          fi
+
+      - name: "Create GitHub release"
         uses: softprops/action-gh-release@v2
         with:
-          files: build/libs/*.jar
-          generate_release_notes: true
+          tag_name: "${{ steps.version.outputs.version }}"
+          name: "Fedora ${{ steps.version.outputs.version }}"
+          body_path: release-body.md
+          files: "${{ steps.artifact.outputs.path }}"
+          fail_on_unmatched_files: true
